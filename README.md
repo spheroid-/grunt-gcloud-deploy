@@ -28,8 +28,7 @@ grunt.initConfig({
     options: {
       application: '', // Your Appengine application ID.
       version: '', // Your Appengine application version.
-      path: '', // The build path of your project (the path where the rest of your grunt tasks build to).
-      db_path: '' // The path to your local database file (to be used when being run).
+      path: '' // The build path of your project (the path where the rest of your grunt tasks build to).
     },
     run: {
       action: 'run'

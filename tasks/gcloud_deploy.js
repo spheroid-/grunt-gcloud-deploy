@@ -16,8 +16,8 @@ module.exports = function (grunt) {
         format = require('util').format,
 
     // Constants.
-        COMMAND_RUN = 'dev_appserver.py --enable_console {db_path} {path}',
-        COMMAND_DEPLOY = 'gcloud app deploy -q --verbosity=debug --project {app} --version {version} {path}/app.yaml {path}/index.yaml {path}/cron.yaml {path}/queue.yaml';
+        COMMAND_RUN = 'dev_appserver.py --enable_console {path}',
+        COMMAND_DEPLOY = 'gcloud app deploy -q --verbosity=debug --project {app} --version {version} {path}/app.yaml';
 
     /**
      * Runs GAE command.
@@ -29,10 +29,6 @@ module.exports = function (grunt) {
         command = command.replace(/{app}/g, options.application);
         command = command.replace(/{version}/g, options.version);
         command = command.replace(/{path}/g, options.path);
-
-        if (options.hasOwnProperty('db_path') && options.db_path != '') {
-            command = command.replace(/{db_path}/g, '--datastore_path=' + options.db_path);
-        }
 
         grunt.log.writeln(command);
 
