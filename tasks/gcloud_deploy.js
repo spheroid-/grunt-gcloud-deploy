@@ -11,13 +11,11 @@
 module.exports = function (grunt) {
 
     // Imports.
-    var sys = require('sys'),
-        spawnSync = require('child_process').spawnSync,
-        format = require('util').format,
+    const spawnSync = require('child_process').spawnSync;
 
     // Constants.
-        COMMAND_RUN = 'dev_appserver.py --enable_console {path}',
-        COMMAND_DEPLOY = 'gcloud app deploy -q --verbosity=debug --project {app} --version {version} {path}/app.yaml';
+    const COMMAND_RUN = 'dev_appserver.py {path}';
+    const COMMAND_DEPLOY = 'gcloud app deploy -q --project {app} {version} {path}/app.yaml';
 
     /**
      * Runs GAE command.
@@ -25,10 +23,11 @@ module.exports = function (grunt) {
      * @param options
      */
     function run(command, options) {
+        const hasVersion = (options.hasOwnProperty('version') && options.version != '')
 
         command = command.replace(/{app}/g, options.application);
-        command = command.replace(/{version}/g, options.version);
         command = command.replace(/{path}/g, options.path);
+        command = command.replace(/{version}/g, hasVersion ? '--version ' + options.version : '')
 
         grunt.log.writeln(command);
 
@@ -56,8 +55,8 @@ module.exports = function (grunt) {
 
         // Merge task-specific and/or target-specific options with these defaults.
         var options = this.options({
-                application: null,
-                version: null,
+                application: '',
+                version: '',
                 path: '.',
                 asyncOutput: false,
                 args: {},
@@ -72,19 +71,16 @@ module.exports = function (grunt) {
         switch(this.data.action) {
             case 'run':
                 // Run application using gcloud SDK
-
-                var status = run(COMMAND_RUN, options);
+                run(COMMAND_RUN, options);
                 return done();
 
             case 'deploy':
                 // Deploy application using gcloud SDK
-
-                var status = run(COMMAND_DEPLOY, options);
+                run(COMMAND_DEPLOY, options);
                 return done();
 
             default:
                 // No action specified
-
                 grunt.log.writeln('No grunt action specified.');
                 return done();
         }
